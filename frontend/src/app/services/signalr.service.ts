@@ -8,53 +8,49 @@ import { Subject } from 'rxjs';
 export class SignalRService {
   private hubConnection!: signalR.HubConnection;
 
-  simulationStatus$ = new Subject<string>();
-  predictionReceived$ = new Subject<any>();
-  simulationError$ = new Subject<string>();
+  // These properties were missing
+  public simulationStatus$ = new Subject<string>();
+  public predictionReceived$ = new Subject<any>();
+  public simulationError$ = new Subject<string>();
 
-  async startConnection(): Promise<void> {
-    if (
-      this.hubConnection &&
-      this.hubConnection.state === signalR.HubConnectionState.Connected
-    ) {
-      return; // already connected
+  // This is now an async function that returns a Promise, so .catch() will work
+  public async startConnection(): Promise<void> {
+    if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
+      return;
     }
 
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:8081/simulationHub')
+      .withUrl('/simulationHub') // RELATIVE URL
       .withAutomaticReconnect()
       .build();
 
-    this.hubConnection.on('SimulationStatus', (msg: string) => {
-      this.simulationStatus$.next(msg);
-    });
-
-    this.hubConnection.on('ReceivePrediction', (data: any) => {
+    this.hubConnection.on('ReceivePrediction', (data) => {
       this.predictionReceived$.next(data);
     });
-
-    this.hubConnection.on('SimulationError', (err: string) => {
+    this.hubConnection.on('SimulationStatus', (status) => {
+      this.simulationStatus$.next(status);
+    });
+    this.hubConnection.on('SimulationError', (err) => {
       this.simulationError$.next(err);
     });
 
     try {
       await this.hubConnection.start();
-      console.log('SignalR connection started.');
+      console.log('SignalR Connection started');
     } catch (err) {
-      console.error('SignalR connection error:', err);
+      console.log('Error while starting connection: ' + err);
+      // Re-throw the error so the calling component's .catch() can see it
       throw err;
     }
   }
 
-  startSimulation(simulationPeriod: { startDate: string; endDate: string }) {
-    if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
-      this.hubConnection.invoke('StartSimulation', simulationPeriod);
-    } else {
-      throw new Error('SignalR not connected');
-    }
+  public startSimulation(simulationPeriod: any): void {
+    this.hubConnection.invoke('StartSimulation', simulationPeriod)
+      .catch(err => console.error(err));
   }
 
-  disconnect(): void {
+  // This method was missing
+  public disconnect(): void {
     if (this.hubConnection) {
       this.hubConnection.stop();
     }

@@ -1,51 +1,46 @@
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import {
-  NavigationCancel,
-  NavigationEnd,
-  NavigationError,
-  NavigationStart,
   Router,
   RouterOutlet,
+  Event as RouterEvent,
+  NavigationStart,
+  NavigationEnd,
+  NavigationCancel,
+  NavigationError
 } from '@angular/router';
-import { CommonModule, NgClass } from '@angular/common';
-import { UploadDatasetComponent } from '../../pages/upload-dataset/upload-dataset.component';
-import { DataRangesComponent } from '../../pages/data-ranges/data-ranges.component';
-import { ModelTrainingComponent } from '../../pages/model-training/model-training.component';
-import { SimulationComponent } from '../../pages/simulation/simulation.component';
+import { CommonModule } from '@angular/common';
 import { LoaderService } from '../../services/loader.service';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
-import { Event } from '@angular/router';
+
+// We no longer need to import the page components here,
+// as the router will handle loading them.
+// This helps prevent circular dependency issues.
 
 @Component({
   selector: 'app-main',
   standalone: true,
   imports: [
-    RouterOutlet,
-    NgClass,
-    UploadDatasetComponent,
-    DataRangesComponent,
-    ModelTrainingComponent,
-    SimulationComponent,
     CommonModule,
+    RouterOutlet,
     LoaderComponent,
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css',
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
   currentRoute: string = '';
   pageNo: number = 1;
 
+  // Make sure LoaderService is public if you access it in the template
   constructor(public loaderService: LoaderService, private router: Router) {}
 
   ngOnInit(): void {
-    this.router.events.subscribe((event: Event) => {
-      // Show loader when navigation starts
+    this.router.events.subscribe((event: RouterEvent) => {
       if (event instanceof NavigationStart) {
         this.loaderService.show();
       }
 
-      // Hide loader and update page number when navigation ends or fails
       if (
         event instanceof NavigationEnd ||
         event instanceof NavigationCancel ||

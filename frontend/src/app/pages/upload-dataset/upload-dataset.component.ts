@@ -1,28 +1,28 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { UploadApiService, UploadResponse } from '../../services/upload-api.service';
+import { FormProgressService } from '../../services/form-progress.service';
+
+// Shared component imports
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { FileDropComponent } from '../../shared/components/file-drop/file-drop.component';
-import { FormProgressService } from '../../services/form-progress.service';
-import { Router } from '@angular/router';
-import { UploadApiService } from '../../services/upload-api.service';
-import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
 
-interface UploadResponse {
-  message: string;
-  totalRecords: number;
-  columnCount: number;
-  dateRangeStart: string;
-  dateRangeEnd: string;
-  passRate: number;
-}
 
 @Component({
   selector: 'app-upload-dataset',
-  standalone: true,
-  imports: [ButtonComponent, FileDropComponent, CommonModule, LoaderComponent],
+  standalone: true, // This makes the component standalone
+  imports: [
+    CommonModule, // Required for *ngIf, *ngFor, etc.
+    ButtonComponent,
+    FileDropComponent,
+    LoaderComponent
+  ],
   templateUrl: './upload-dataset.component.html',
   styleUrl: './upload-dataset.component.css',
 })
+// The "export" keyword here is CRITICAL for fixing the error.
 export class UploadDatasetComponent {
   selectedFile: File | null = null;
   isUploaded = false;
@@ -50,19 +50,15 @@ export class UploadDatasetComponent {
       alert('Please select a valid CSV file.');
       return;
     }
-
     this.isLoading = true;
-
     this.api.uploadDataset(this.selectedFile).subscribe({
-      next: (res) => {
+      next: (res: UploadResponse) => {
         this.uploadResult = res;
         this.isUploaded = true;
         this.isLoading = false;
-
-        // Store upload result to be shared with other pages
         this.formProgress.setData('uploadResult', res);
       },
-      error: (err) => {
+      error: (err: any) => {
         alert('Upload failed: ' + (err?.error?.detail || 'Unknown error'));
         this.isUploaded = false;
         this.isLoading = false;

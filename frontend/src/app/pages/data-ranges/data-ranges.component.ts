@@ -23,7 +23,7 @@ interface SummaryData {
 
 @Component({
   selector: 'app-data-ranges',
-  standalone: true,
+  standalone: true,  // <-- ADD THIS // <-- ADD THIS
   imports: [BarChartComponent, ButtonComponent, CommonModule, FormsModule],
   templateUrl: './data-ranges.component.html',
   styleUrl: './data-ranges.component.css',
