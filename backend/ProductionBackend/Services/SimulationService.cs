@@ -118,6 +118,27 @@ namespace ProductionBackend.Services
                 _logger.LogError(ex, "Prediction failed due to an exception.");
                 return null;
             }
+        }public async Task<PredictionResponse?> PredictSingleAsync(SimulationDataRow input)
+    {
+        var httpClient = _httpClientFactory.CreateClient("MLServiceClient");
+
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync("/predict", input);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("PredictSingleAsync: ML service responded with status code {code}", response.StatusCode);
+                return null;
+            }
+
+            return await response.Content.ReadFromJsonAsync<PredictionResponse>(_jsonOptions);
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "PredictSingleAsync: Error calling ML service.");
+            return null;
+        }
+    }
+
     }
 }

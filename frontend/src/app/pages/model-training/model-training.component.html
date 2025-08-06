@@ -1,38 +1,73 @@
 <div class="wrapper">
-  <div class="performance-matrix">
-    <div class="card-enclosure">
-      <div class="card-content">
-        <h1 class="num">94.2%</h1>
-        <p class="text">Accuracy</p>
-      </div>
-    </div>
-    <div class="card-enclosure">
-      <div class="card-content">
-        <h1 class="num">89.2%</h1>
-        <p class="text">Precision</p>
-      </div>
-    </div>
-    <div class="card-enclosure">
-      <div class="card-content">
-        <h1 class="num">91.2%</h1>
-        <p class="text">Recall</p>
-      </div>
-    </div>
-    <div class="card-enclosure">
-      <div class="card-content">
-        <h1 class="num">92.2%</h1>
-        <p class="text">F1-Score</p>
-      </div>
-    </div>
+  <!-- 🔄 Loader shown while training is in progress -->
+  <app-loader
+    *ngIf="isLoading"
+    [overlay]="false"
+    [message]="'Training the model...'"
+  ></app-loader>
+
+  <!-- 🧠 Initial state: Show only train button -->
+  <div class="btn" *ngIf="!isLoading && !trainingComplete">
+    <app-button
+      label="Click to Train"
+      type="primary"
+      [disabled]="false"
+      (click)="startTraining()"
+    ></app-button>
   </div>
 
-  <div class="line-chart">
-    <app-line-chart></app-line-chart>
-  </div>
-  <div class="donut">
-    <app-donut-chart></app-donut-chart>
-  </div>
-  <div class="btn">
-    <app-button label="Next" type="primary" [disabled]="false"></app-button>
-  </div>
+  <!-- ✅ Once training is complete, show results and next button -->
+  <ng-container *ngIf="trainingComplete && !isLoading">
+    <div class="performance-matrix" *ngIf="modelTrainingResult">
+      <div class="card-enclosure">
+        <div class="card-content">
+          <h1 class="num">
+            {{ modelTrainingResult.metrics.accuracy | number : "1.1-1" }}%
+          </h1>
+          <p class="text">Accuracy</p>
+        </div>
+      </div>
+      <div class="card-enclosure">
+        <div class="card-content">
+          <h1 class="num">
+            {{ modelTrainingResult.metrics.precision | number : "1.1-1" }}%
+          </h1>
+          <p class="text">Precision</p>
+        </div>
+      </div>
+      <div class="card-enclosure">
+        <div class="card-content">
+          <h1 class="num">
+            {{ modelTrainingResult.metrics.recall | number : "1.1-1" }}%
+          </h1>
+          <p class="text">Recall</p>
+        </div>
+      </div>
+      <div class="card-enclosure">
+        <div class="card-content">
+          <h1 class="num">
+            {{ modelTrainingResult.metrics.f1Score | number : "1.1-1" }}%
+          </h1>
+          <p class="text">F1-Score</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="line-chart">
+      <app-line-chart></app-line-chart>
+    </div>
+
+    <div class="donut">
+      <app-donut-chart></app-donut-chart>
+    </div>
+
+    <div class="btn">
+      <app-button
+        label="Next"
+        type="primary"
+        [disabled]="false"
+        (click)="onNextClicked()"
+      ></app-button>
+    </div>
+  </ng-container>
 </div>

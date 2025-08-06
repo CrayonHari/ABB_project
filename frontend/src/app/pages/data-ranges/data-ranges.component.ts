@@ -65,7 +65,7 @@ export class DataRangesComponent {
       },
     });
   }
-
+  splitTimes: any[] = [];
   autoFillDateRanges() {
     const uploadResult = this.formProgress.getData(
       'uploadResult'
@@ -80,39 +80,73 @@ export class DataRangesComponent {
       return;
     }
 
-    const start = new Date(uploadResult.dateRangeStart);
-    const end = new Date(uploadResult.dateRangeEnd);
+    const startUTC = new Date(uploadResult.dateRangeStart + 'Z');
+    const endUTC = new Date(uploadResult.dateRangeEnd + 'Z');
 
-    // Normalize seconds and milliseconds to 0
-    start.setSeconds(0, 0);
-    end.setSeconds(0, 0);
+    const totalMs = endUTC.getTime() - startUTC.getTime();
 
-    const totalMs = end.getTime() - start.getTime();
-    const trainMs = totalMs * 0.7;
-    const testMs = totalMs * 0.2;
-    const simMs = totalMs * 0.1;
+    if (totalMs <= 0) {
+      alert('Invalid date range. End date must be after start date.');
+      return;
+    }
 
-    const trainEnd = new Date(start.getTime() + trainMs - 1000); // -1s for no overlap
+    const trainMs = Math.floor(totalMs * 0.7);
+    const testMs = Math.floor(totalMs * 0.2);
+    const simMs = totalMs - trainMs - testMs - 2000; // subtract 2 seconds for gaps
+
+    const trainStart = startUTC;
+    const trainEnd = new Date(trainStart.getTime() + trainMs);
+
     const testStart = new Date(trainEnd.getTime() + 1000);
-    const testEnd = new Date(testStart.getTime() + testMs - 1000);
+    const testEnd = new Date(testStart.getTime() + testMs);
+
     const simStart = new Date(testEnd.getTime() + 1000);
-    const simEnd = new Date(simStart.getTime() + simMs);
+    const simEnd = endUTC;
 
-    // Format for datetime-local input: 'YYYY-MM-DDTHH:mm'
-    const fmt = (d: Date) => d.toISOString().slice(0, 16);
+    const fmt = (d: Date) => {
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      return (
+        d.getUTCFullYear() +
+        '-' +
+        pad(d.getUTCMonth() + 1) +
+        '-' +
+        pad(d.getUTCDate()) +
+        'T' +
+        pad(d.getUTCHours()) +
+        ':' +
+        pad(d.getUTCMinutes()) +
+        ':' +
+        pad(d.getUTCSeconds())
+      );
+    };
 
-    this.training.startDate = fmt(start);
-    this.training.endDate = fmt(trainEnd);
+    // Assign formatted values
+    this.training = {
+      startDate: fmt(trainStart),
+      endDate: fmt(trainEnd),
+    };
+    this.testing = {
+      startDate: fmt(testStart),
+      endDate: fmt(testEnd),
+    };
+    this.simulation = {
+      startDate: fmt(simStart),
+      endDate: fmt(simEnd),
+    };
 
-    this.testing.startDate = fmt(testStart);
-    this.testing.endDate = fmt(testEnd);
+    // Store all in splitTimes
+    this.splitTimes = [
+      { label: 'training', ...this.training },
+      { label: 'testing', ...this.testing },
+      { label: 'simulation', ...this.simulation },
+    ];
 
-    this.simulation.startDate = fmt(simStart);
-    this.simulation.endDate = fmt(simEnd);
+    console.log('Split Times:', this.splitTimes);
   }
 
   onNextClicked() {
     if (this.isValid) {
+      this.formProgress.setData('splitTimes', this.splitTimes);
       this.formProgress.completeStep('data-ranges');
       this.router.navigate(['/model-training']);
     } else {

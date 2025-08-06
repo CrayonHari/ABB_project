@@ -39,9 +39,6 @@ D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\Production
 D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\ProductionBackend.MvcApplicationPartsAssemblyInfo.cs
 D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\ProductionBackend.MvcApplicationPartsAssemblyInfo.cache
 D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\ProductionBackend.sourcelink.json
-D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\ProductionBackend.dll
-D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\refint\ProductionBackend.dll
-D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\ProductionBackend.pdb
 D:\ABB_project\ABB_project\backend\ProductionBackend\bin\Debug\net8.0\appsettings.Development.json
 D:\ABB_project\ABB_project\backend\ProductionBackend\bin\Debug\net8.0\appsettings.json
 D:\ABB_project\ABB_project\backend\ProductionBackend\bin\Debug\net8.0\ProductionBackend.exe
@@ -62,5 +59,8 @@ D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\staticweba
 D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\staticwebassets.pack.json
 D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\scopedcss\bundle\ProductionBackend.styles.css
 D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\Producti.C2539ECB.Up2Date
+D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\ProductionBackend.dll
+D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\refint\ProductionBackend.dll
+D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\ProductionBackend.pdb
 D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\ProductionBackend.genruntimeconfig.cache
 D:\ABB_project\ABB_project\backend\ProductionBackend\obj\Debug\net8.0\ref\ProductionBackend.dll

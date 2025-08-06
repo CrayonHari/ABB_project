@@ -1,4 +1,16 @@
 <div class="wrapper">
+  <button (click)="startSimulation()">Start Simulation</button>
+
+  <p><strong>Status:</strong> {{ statusMessage }}</p>
+
+  <ul>
+    <li *ngFor="let prediction of predictions">
+      {{ prediction.timestamp }} — <strong>{{ prediction.sampleId }}</strong> →
+      <em>{{ prediction.prediction }}</em> (Confidence:
+      {{ prediction.confidence }}%)
+    </li>
+  </ul>
+
   <div class="chart-filled">
     <app-line-chart-filled></app-line-chart-filled>
   </div>

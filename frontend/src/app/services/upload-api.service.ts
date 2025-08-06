@@ -19,6 +19,22 @@ export class UploadApiService {
       data
     );
   }
+
+  trainModel(payload: {
+    trainStart: string;
+    trainEnd: string;
+    testStart: string;
+    testEnd: string;
+  }): Observable<any> {
+    return this.http.post('http://localhost:5247/api/model/train', payload);
+  }
+
+  predictSingle(payload: any): Observable<any> {
+    return this.http.post(
+      'http://localhost:5247/api/model/predict-single',
+      payload
+    );
+  }
 }
 
 export interface UploadResponse {
@@ -28,4 +44,17 @@ export interface UploadResponse {
   dateRangeStart: string;
   dateRangeEnd: string;
   passRate: number;
+}
+
+export interface TrainingMetrics {
+  accuracy: number;
+  precision: number;
+  recall: number;
+  f1Score: number;
+}
+
+export interface TrainingResponse {
+  status: string;
+  modelId: string;
+  metrics: TrainingMetrics;
 }
