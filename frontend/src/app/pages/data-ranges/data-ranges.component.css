@@ -1,0 +1,101 @@
+.wrapper {
+  display: flex;
+  padding-top: 40px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+.datepickers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.datepicker {
+  display: flex;
+  flex-direction: column;
+  min-width: 280px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--color-sec);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(150, 75, 0, 0.6);
+  gap: 10px;
+}
+.datepicker > div:first-child {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.datepicker label {
+  font-size: 14px;
+}
+.datepicker input[type="datetime-local"] {
+  width: 100%;
+  padding: 8px;
+
+  border: 1px solid rgba(150, 75, 0, 0.5);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.dateshows {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  /* padding: 50px;
+  background-color: var(--color-accent);
+  border: 1px solid rgba(150, 75, 0, 0.5);
+  border-radius: 12px; */
+}
+
+.dateshow {
+  display: flex;
+  flex-direction: column;
+  min-width: 250px;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: var(--color-sec);
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(150, 75, 0, 0.6);
+  gap: 10px;
+}
+
+.dateshow .heading {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.dateshow .num {
+  font-size: 32px;
+  color: var(--color-accent);
+}
+
+.dateshow .date {
+  font-size: 14px;
+  color: #777;
+}
+
+.btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 100px;
+}
+
+app-bar-chart {
+  /* width: 100%; */
+  display: block;
+}

@@ -1,0 +1,37 @@
+<div class="wrapper">
+  <!-- Only show file drop when not loading and not uploaded -->
+  <app-file-drop
+    *ngIf="!isLoading && !isUploaded"
+    (fileDropped)="handleFile($event)"
+  ></app-file-drop>
+
+  <!-- Local loader while uploading -->
+  <app-loader
+    *ngIf="isLoading"
+    [overlay]="false"
+    [message]="'Uploading dataset...'"
+  ></app-loader>
+
+  <!-- Upload result shown in same place after upload -->
+  <div *ngIf="uploadResult && isUploaded" class="upload-result">
+    <p class="success">{{ uploadResult.message }}</p>
+    <ul>
+      <li><strong>Total Records:</strong> {{ uploadResult.totalRecords }}</li>
+      <li><strong>Columns:</strong> {{ uploadResult.columnCount }}</li>
+      <li>
+        <strong>Date Range:</strong> {{ uploadResult.dateRangeStart }} →
+        {{ uploadResult.dateRangeEnd }}
+      </li>
+      <li><strong>Pass Rate:</strong> {{ uploadResult.passRate }}%</li>
+    </ul>
+  </div>
+
+  <!-- Upload / Next Button -->
+  <app-button
+    type="primary"
+    [disabled]="isLoading"
+    [label]="isLoading ? 'Uploading...' : isUploaded ? 'Next' : 'Upload'"
+    (click)="isUploaded ? onNextClicked() : uploadFile()"
+    style="margin-left: auto"
+  ></app-button>
+</div>

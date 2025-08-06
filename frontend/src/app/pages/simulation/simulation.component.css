@@ -1,0 +1,56 @@
+.wrapper {
+  display: flex;
+  padding-top: 40px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+app-line-chart-filled {
+  display: block;
+}
+
+app-circle-stat {
+  display: block;
+}
+
+.live-stats {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.card-enclosure {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 60px;
+  border: 1px solid rgba(150, 75, 0, 0.6);
+
+  border-radius: 12px;
+  background-color: var(--color-sec);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-content .num {
+  color: #000;
+}
+.card-content .text {
+  color: #777;
+  font-size: 16px;
+}
+
+.btn {
+  display: flex;
+}

@@ -1,0 +1,71 @@
+<div class="wrapper">
+  <div class="datepickers">
+    <div class="datepicker">
+      <div>Training Period</div>
+      <label>Start Date:</label>
+      <input type="datetime-local" step="1" [(ngModel)]="training.startDate" />
+      <label>End Date:</label>
+      <input type="datetime-local" step="1" [(ngModel)]="training.endDate" />
+    </div>
+    <div class="datepicker">
+      <div>Testing Period</div>
+      <label>Start Date:</label>
+      <input type="datetime-local" step="1" [(ngModel)]="testing.startDate" />
+      <label>End Date:</label>
+      <input type="datetime-local" step="1" [(ngModel)]="testing.endDate" />
+    </div>
+    <div class="datepicker">
+      <div>Simulation Period</div>
+      <label>Start Date:</label>
+      <input
+        type="datetime-local"
+        step="1"
+        [(ngModel)]="simulation.startDate"
+      />
+      <label>End Date:</label>
+      <input type="datetime-local" step="1" [(ngModel)]="simulation.endDate" />
+    </div>
+  </div>
+
+  <div class="dateshows" *ngIf="recordCounts">
+    <div class="dateshow">
+      <div class="heading">Training Period</div>
+      <div class="num">{{ recordCounts.training }}</div>
+      <div class="date">{{ training.startDate }} → {{ training.endDate }}</div>
+    </div>
+    <div class="dateshow">
+      <div class="heading">Testing Period</div>
+      <div class="num">{{ recordCounts.testing }}</div>
+      <div class="date">{{ testing.startDate }} → {{ testing.endDate }}</div>
+    </div>
+    <div class="dateshow">
+      <div class="heading">Simulation Period</div>
+      <div class="num">{{ recordCounts.simulation }}</div>
+      <div class="date">
+        {{ simulation.startDate }} → {{ simulation.endDate }}
+      </div>
+    </div>
+  </div>
+
+  <!-- <app-bar-chart *ngIf="recordCounts" [data]="recordCounts"></app-bar-chart> -->
+  <app-bar-chart *ngIf="recordCounts"></app-bar-chart>
+  <div class="btn">
+    <app-button
+      label="Validate Ranges"
+      type="primary"
+      [disabled]="false"
+      (click)="validateRanges()"
+    ></app-button>
+
+    <app-button
+      label="Next"
+      type="primary"
+      [disabled]="!isValid"
+      (click)="onNextClicked()"
+    ></app-button>
+    <app-button
+      (click)="autoFillDateRanges()"
+      label="Auto Fill Ranges"
+    ></app-button>
+  </div>
+</div>

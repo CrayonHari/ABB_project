@@ -1,0 +1,22 @@
+<div class="dropzone" [class.dragging]="isDragging" (click)="fileInput.click()">
+  <img src="assets/upload.png" alt="" height="60px" />
+  <div class="text" style="padding-top: 12px">
+    <p ngIf="fileName.length === 0">Drag and drop your file here</p>
+    <p style="font-size: 14px">or click to browse files</p>
+    <p style="font-size: 12px; color: #888">
+      <i>Only csv files are accepted.</i>
+    </p>
+  </div>
+
+  <p class="file-name" ngIf="fileName.length > 0">
+    {{ fileName }}
+  </p>
+
+  <input
+    #fileInput
+    accept=".csv"
+    type="file"
+    hidden
+    (change)="onFileSelect($event)"
+  />
+</div>

@@ -1,0 +1,53 @@
+services:
+  frontend:
+    container_name: frontend-container
+    build:
+      # IMPORTANT: '..' goes UP one directory from /backend to /ABB_project, then into /frontend.
+      # This is the key to finding your frontend code.
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      production-backend:
+        condition: service_healthy
+
+  production-backend:
+    container_name: production-backend-container
+    build:
+      # This is correct because 'ProductionBackend' is in the same folder as this compose file.
+      context: ./ProductionBackend
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80"
+    environment:
+      # This configuration avoids the code 139 error by running on HTTP only.
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - MLService__BaseUrl=http://ml-service:8000
+    depends_on:
+      ml-service:
+        condition: service_healthy
+
+  ml-service:
+    container_name: ml-service-container
+    build:
+      # This is also correct because 'ml-service' is in the same folder.
+      context: ./ml_service
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ml_service_data:/app/data
+      - ml_service_model:/app/model
+    # The healthcheck allows other services to wait until this one is ready.
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  ml_service_data:
+  ml_service_model:

@@ -1,0 +1,38 @@
+<div class="wrapper">
+  <div class="performance-matrix">
+    <div class="card-enclosure">
+      <div class="card-content">
+        <h1 class="num">94.2%</h1>
+        <p class="text">Accuracy</p>
+      </div>
+    </div>
+    <div class="card-enclosure">
+      <div class="card-content">
+        <h1 class="num">89.2%</h1>
+        <p class="text">Precision</p>
+      </div>
+    </div>
+    <div class="card-enclosure">
+      <div class="card-content">
+        <h1 class="num">91.2%</h1>
+        <p class="text">Recall</p>
+      </div>
+    </div>
+    <div class="card-enclosure">
+      <div class="card-content">
+        <h1 class="num">92.2%</h1>
+        <p class="text">F1-Score</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="line-chart">
+    <app-line-chart></app-line-chart>
+  </div>
+  <div class="donut">
+    <app-donut-chart></app-donut-chart>
+  </div>
+  <div class="btn">
+    <app-button label="Next" type="primary" [disabled]="false"></app-button>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th *ngFor="let col of displayedColumns">{{ col | titlecase }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of tableData">
+        <td *ngFor="let col of displayedColumns">
+          {{ getCellValue(row, col) }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

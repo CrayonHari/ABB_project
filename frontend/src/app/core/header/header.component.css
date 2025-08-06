@@ -1,0 +1,34 @@
+.app-header {
+  width: 95%;
+  margin: 20px auto 0 auto;
+  background: var(--color-sec);
+  height: 60px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid rgba(150, 75, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
+}
+
+.app-header .brand {
+  color: rgba(150, 75, 0, 0.7);
+  font-weight: 600;
+  font-size: 24px;
+  letter-spacing: 3px;
+}
+
+.app-header button {
+  margin-left: 10px;
+  background: var(--color-accent);
+  color: var(--color-white);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.app-header button:hover {
+  background: #3b78c4;
+}

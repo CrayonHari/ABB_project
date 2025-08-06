@@ -1,0 +1,27 @@
+.app-footer {
+  width: 95%;
+  margin: 20px auto;
+  background: var(--color-sec);
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid rgba(150, 75, 0, 0.3);
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.09);
+}
+
+.app-footer p {
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.app-footer a {
+  color: var(--color-accent);
+  text-decoration: none;
+  margin: 0 15px 0 0;
+}
+
+.app-footer a:hover {
+  text-decoration: underline;
+}

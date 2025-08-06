@@ -1,0 +1,61 @@
+# Python cache and build files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+*.db
+
+# Virtual environment
+venv/
+.env/
+
+# Model artifacts
+*.joblib
+*.pkl
+*.h5
+*.pt
+*.onnx
+/app/data/
+/app/model/
+
+# FastAPI temporary files
+*.tmp
+*.temp
+*.bak
+
+# Jupyter / notebooks (if used)
+*.ipynb_checkpoints/
+
+# Node/npm cache (if used with frontend builds)
+node_modules/
+dist/
+build/
+
+# ASP.NET build files
+bin/
+obj/
+*.user
+*.vs/
+*.swp
+*.suo
+*.cache
+*.dbmdl
+
+# Local testing files
+*.csv
+!production_data.csv  # keep your main dataset
+
+# Logs
+*.log
+logs/
+*.coverage
+coverage.xml
+
+# Docker related
+*.pid
+*.seed
+*.pid.lock
+.dockerignore
+docker-compose.override.yml

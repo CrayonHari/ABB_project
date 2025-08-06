@@ -1,0 +1,32 @@
+<div class="glass-container">
+  <aside class="sidebar">
+    <ul>
+      <li [ngClass]="{ completed: pageNo > 1, active: pageNo === 1 }">
+        Upload Dataset
+      </li>
+      <li [ngClass]="{ completed: pageNo > 2, active: pageNo === 2 }">
+        Data Ranges
+      </li>
+      <li [ngClass]="{ completed: pageNo > 3, active: pageNo === 3 }">
+        Model Training
+      </li>
+      <li [ngClass]="{ active: pageNo === 4 }">Simulation</li>
+    </ul>
+  </aside>
+
+  <div class="content-area">
+    <div class="step-counter">{{ pageNo }} of 4</div>
+    <div class="wrapper">
+      <!-- <app-upload-dataset></app-upload-dataset>
+      <app-data-ranges></app-data-ranges>
+      <app-model-training></app-model-training>
+      <app-simulation></app-simulation> -->
+      <!-- <app-loader
+        *ngIf="loaderService.loading$ | async"
+        [overlay]="true"
+        message="Loading..."
+      ></app-loader> -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

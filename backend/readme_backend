@@ -1,0 +1,168 @@
+Of course. Now that your project is stable and feature-complete, creating a high-quality `README.md` file is the perfect next step. A good README is essential for you to remember how to run the project in the future, and for anyone else who might want to use or contribute to it.
+
+Here is a comprehensive README file written in Markdown. You can copy this entire text and save it in a file named `README.md` in the root directory of your GitHub repository.
+
+-----
+
+````markdown
+# IntelliInspect: AI-Powered Production Quality Control System
+
+An end-to-end application demonstrating a modern microservices architecture for a machine learning task. This system allows users to upload manufacturing data, train a predictive model to detect failures, and run real-time simulations.
+
+The architecture consists of:
+* **.NET 8 Backend**: Acts as a "Backend for Frontend" (BFF), handling all client-facing requests, managing workflows, and communicating with the ML service.
+* **Python (FastAPI) ML Service**: A high-performance service responsible for all data science tasks, including data processing, model training, and prediction. It uses Parquet for efficient data handling.
+* **Angular Frontend (Placeholder)**: A user interface to interact with the system (the integration guide for which has been provided).
+* **Docker Compose**: To containerize and orchestrate the services for easy setup and deployment.
+
+---
+
+## Features
+
+* **Dataset Upload**: Upload large CSV datasets of manufacturing sensor data.
+* **Efficient Data Processing**: On upload, CSVs are converted to the highly efficient Apache Parquet format.
+* **Dynamic Date Validation**: Validates user-selected time periods against the actual range of the uploaded dataset.
+* **Dynamic Model Training**: Train an XGBoost classification model on a selected time range of data.
+* **Imbalance Handling**: Automatically balances the model to handle imbalanced datasets (e.g., where "pass" is more common than "fail").
+* **Intelligent Thresholding**: Automatically finds and applies the optimal probability threshold to maximize model effectiveness (F1-Score).
+* **Real-time Simulation**: Stream predictions for a given time range back to the client using .NET SignalR and WebSockets.
+* **Model Insights**: View the most important features that influence the model's predictions.
+
+---
+
+## Architecture Overview
+
+```
++----------------+      HTTP Requests       +-----------------------+      HTTP Requests      +---------------------+
+|                | <----------------------> |                       | <-------------------> |                     |
+| Frontend App   |      (localhost:8080)    |   .NET 8 BFF Backend  |   (Internal Docker    |  Python ML Service  |
+| (Angular)      |                          |   (localhost:8081)    |    Network)           |  (localhost:8000)   |
+|                | <----------------------> |                       |                       |                     |
++----------------+      SignalR (WebSockets) +-----------------------+                       +---------------------+
+                                                                                                     |
+                                                                                                     |  Reads/Writes
+                                                                                                     V
+                                                                                            +--------------------+
+                                                                                            | Docker Volume      |
+                                                                                            | (/data, /model)    |
+                                                                                            | - dataset.parquet  |
+                                                                                            | - model.xgb        |
+                                                                                            +--------------------+
+```
+
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed on your system:
+
+* **Docker and Docker Compose**: This is the primary requirement for running the project.
+    * [Install Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose).
+* **Git**: For cloning the repository.
+    * [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* **(Optional) .NET 8 SDK**: Required only if you want to run the backend service locally *without* Docker.
+    * [Install .NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+* **(Optional) Python 3.9+**: Required only if you want to run the ML service locally *without* Docker.
+    * [Install Python](https://www.python.org/downloads/)
+* **An IDE of your choice**:
+    * [Visual Studio Code](https://code.visualstudio.com/) (Recommended)
+    * Visual Studio 2022
+
+---
+
+## Getting Started (Docker Installation)
+
+This is the simplest and recommended way to run the entire application stack.
+
+### 1. Clone the Repository
+Open your terminal and clone the project from your GitHub repository.
+```bash
+git clone <your-github-repository-url>
+cd <repository-name>
+```
+
+### 2. Build and Run the Application
+From the root directory of the project (where the `docker-compose.yml` file is located), run the following command:
+
+```bash
+docker-compose up --build
+```
+
+* `--build`: This flag tells Docker Compose to build the images from your `Dockerfile`s before starting the containers. It's important to use this command whenever you make code changes.
+
+This command will:
+1.  Pull the necessary base images (for .NET and Python).
+2.  Build the custom images for your backend and ML service.
+3.  Create and start the containers for all services.
+4.  Connect the containers to a shared Docker network so they can communicate.
+
+### 3. Verify the Services are Running
+Once the command finishes, you can check that the services are running correctly by visiting their Swagger UI pages in your web browser:
+
+* **.NET Backend API:** [http://localhost:8081/swagger](http://localhost:8081/swagger)
+* **Python ML Service API:** [http://localhost:8000/docs](http://localhost:8000/docs)
+* **Frontend Application:** [http://localhost:8080](http://localhost:8080) (or the port defined in your frontend's Dockerfile/docker-compose service)
+
+You are now ready to use the application!
+
+---
+
+## API Usage Workflow
+
+Once the application is running, you can test the full workflow using the .NET Swagger UI at **[http://localhost:8081/swagger](http://localhost:8081/swagger)**.
+
+1.  **Upload Dataset**:
+    * Go to the `POST /api/dataset/upload` endpoint.
+    * Upload a sample CSV dataset. You can use the `sample_test_dataset.csv` provided during our conversation.
+    * On success, you'll receive the total record count and the full date range of the dataset.
+
+2.  **Validate Date Ranges**:
+    * Go to the `POST /api/dataset/validate-ranges` endpoint.
+    * Provide a JSON payload with `trainingPeriod`, `testingPeriod`, and `simulationPeriod`. The dates must be within the range you received from the upload step.
+
+3.  **Train the Model**:
+    * Go to the `POST /api/model/train` endpoint.
+    * Provide a JSON payload with `trainStart`, `trainEnd`, `testStart`, and `testEnd`.
+    * On success, you'll receive a confirmation message and a dictionary of performance metrics (Accuracy, Precision, Recall, etc.) on a 0-100 scale.
+
+4.  **Run Simulation**:
+    * This requires a client that can connect via WebSockets (like a frontend application). The simulation is orchestrated through the `.NET SignalR Hub` and will stream predictions in real-time.
+
+---
+
+## (Optional) Running Services Locally Without Docker
+
+If you want to debug a specific service with a local debugger, you can run them outside of Docker.
+
+### Running the Python ML Service
+
+```bash
+# Navigate to the ml_service directory
+cd ml_service
+
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the FastAPI server
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Running the .NET Backend
+
+```bash
+# Navigate to the backend project directory
+cd ProductionBackend
+
+# Restore dependencies
+dotnet restore
+
+# Run the application
+dotnet run
+```
+* **Note**: When running locally, the .NET backend will need to connect to the ML service. You may need to change the `MLService:BaseUrl` in `ProductionBackend/appsettings.Development.json` from `http://ml-service:8000` to `http://localhost:8000`.
+
+````
