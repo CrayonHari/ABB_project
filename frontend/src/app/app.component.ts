@@ -10,6 +10,9 @@ import { LineChartComponent } from './shared/components/line-chart/line-chart.co
 import { LiveTableComponent } from './shared/components/live-table/live-table.component';
 import { CircleStatComponent } from './shared/components/circle-stat/circle-stat.component';
 import { LoaderComponent } from './shared/components/loader/loader.component';
+import { ErrorsuccessboxComponent } from './shared/components/errorsuccessbox/errorsuccessbox.component';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +29,7 @@ import { LoaderComponent } from './shared/components/loader/loader.component';
     LiveTableComponent,
     CircleStatComponent,
     LoaderComponent,
+    ErrorsuccessboxComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

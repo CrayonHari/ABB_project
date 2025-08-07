@@ -25,7 +25,12 @@ body {
 }
 
 body {
-  background: var(--color-bg);
+  /* background: var(--color-bg); */
+  background: linear-gradient(
+    to right,
+    rgba(255, 0, 0, 0.55),
+    rgba(0, 0, 255, 0.38)
+  );
   font-family: var(--font-family);
   color: var(--color-text);
 }

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
+
 import {
   Chart as ChartJS,
   // Controllers
@@ -66,53 +67,7 @@ ChartJS.register(
 })
 export class LineChartComponent {
   chartData: ChartData<'line', { key: string; value: number }[]> = {
-    datasets: [
-      {
-        label: 'Training Accuracy',
-        data: [
-          { key: '1', value: 0.35 },
-          { key: '2', value: 1.12 },
-          { key: '3', value: 0.78 },
-          { key: '4', value: 1.01 },
-          { key: '5', value: 0.66 },
-          { key: '6', value: 0.14 },
-          { key: '7', value: 0.93 },
-          { key: '8', value: 0.49 },
-          { key: '9', value: 0.81 },
-          { key: '10', value: 1.18 },
-        ],
-        parsing: {
-          xAxisKey: 'key',
-          yAxisKey: 'value',
-        },
-        borderColor: '#ff6384',
-        backgroundColor: '#ff6384',
-        yAxisID: 'y',
-      },
-      {
-        label: 'Training Loss',
-        data: [
-          { key: '1', value: 0.25 },
-          { key: '2', value: 0.92 },
-          { key: '3', value: 0.58 },
-          { key: '4', value: 1.05 },
-          { key: '5', value: 0.46 },
-          { key: '6', value: 0.64 },
-          { key: '7', value: 0.63 },
-          { key: '8', value: 0.29 },
-          { key: '9', value: 0.61 },
-          { key: '10', value: 0.98 },
-        ],
-        parsing: {
-          xAxisKey: 'key',
-          yAxisKey: 'value',
-        },
-
-        borderColor: '#36a2eb',
-        backgroundColor: '#36a2eb',
-        yAxisID: 'y1',
-      },
-    ],
+    datasets: [],
   };
 
   chartOptions: ChartOptions<'line'> = {
@@ -120,7 +75,7 @@ export class LineChartComponent {
     plugins: {
       title: {
         display: true,
-        text: 'Two-Line Chart',
+        text: 'Training Accuracy and Loss',
         font: {
           size: 20,
         },
@@ -136,17 +91,64 @@ export class LineChartComponent {
           display: true,
           text: 'Accuracy',
         },
+        position: 'left',
       },
       y1: {
-        position: 'right',
-        grid: {
-          drawOnChartArea: false,
-        },
         title: {
           display: true,
           text: 'Loss',
         },
+        position: 'right',
+        grid: {
+          drawOnChartArea: false,
+        },
       },
     },
   };
+
+  @Input() set trainingHistoryInput(
+    value:
+      | { epoch: number; trainLoss: number; trainAccuracy: number }[]
+      | undefined
+  ) {
+    const history = value ?? [];
+
+    // Format the datasets dynamically based on input
+    const accuracyData = history.map((entry) => ({
+      key: entry.epoch.toString(),
+      value: entry.trainAccuracy,
+    }));
+
+    const lossData = history.map((entry) => ({
+      key: entry.epoch.toString(),
+      value: entry.trainLoss,
+    }));
+
+    this.chartData = {
+      datasets: [
+        {
+          label: 'Training Accuracy',
+          data: accuracyData,
+          parsing: {
+            xAxisKey: 'key',
+            yAxisKey: 'value',
+          },
+          borderColor: '#4caf50',
+          backgroundColor: '#4caf50',
+          yAxisID: 'y',
+        },
+        {
+          label: 'Training Loss',
+          data: lossData,
+          parsing: {
+            xAxisKey: 'key',
+            yAxisKey: 'value',
+          },
+          borderColor: '#f44336',
+          backgroundColor: '#f44336',
+          yAxisID: 'y1',
+        },
+      ],
+    };
+  }
 }

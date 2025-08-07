@@ -1,4 +1,3 @@
-
 using Microsoft.Extensions.Logging;
 using ProductionBackend.DTOs;
 using ProductionBackend.Models;
@@ -44,45 +43,41 @@ namespace ProductionBackend.Services
                 yield break;
             }
 
+            // --- START OF THE CHANGE ---
+            // Initialize a counter for the SampleId
+            int sampleCounter = 1;
+            // --- END OF THE CHANGE ---
+
             foreach (var row in simulationData)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await Task.Delay(1000, cancellationToken);
-                var predictionResponse = await GetPredictionAsync(httpClient, row);
+                await Task.Delay(1000, cancellationToken); // 1-second delay
+
+                var predictionPayload = new Dictionary<string, JsonElement>(row);
+                predictionPayload.Remove("synthetic_timestamp");
+                predictionPayload.Remove("Response");
+                
+                var predictionResponse = await GetPredictionAsync(httpClient, predictionPayload);
 
                 if (predictionResponse == null)
                 {
+                    _logger.LogWarning("ML service failed to predict for a row, using fallback.");
                     predictionResponse = new PredictionResponse { Prediction = "Error", Confidence = 0 };
                 }
-
-                // =================================================================
-                // THE CRITICAL FIX: The previous code crashed if a row of data
-                // from the ML service was missing an 'id' or 'sample_ID' key.
-                // This new code uses TryGetValue, which is a safe way to check
-                // for a key without causing a KeyNotFoundException.
-                // =================================================================
-                string sampleId = "N/A"; // Start with a default value
-
-                // Safely try to get 'sample_ID'. If it exists, use it.
-                if (row.TryGetValue("sample_ID", out var sampleIdElement))
-                {
-                    sampleId = sampleIdElement.ToString();
-                }
-                // If not, safely try to get 'id'. If it exists, use it.
-                else if (row.TryGetValue("id", out var idElement))
-                {
-                    sampleId = idElement.ToString();
-                }
-                // =================================================================
 
                 var logEntry = new PredictionLogEntry
                 {
                     Timestamp = DateTime.UtcNow,
-                    SampleId = sampleId, // Use the safely retrieved ID
+                    // --- START OF THE CHANGE ---
+                    // Use the counter for the SampleId and then increment it
+                    SampleId = sampleCounter.ToString(),
+                    // --- END OF THE CHANGE ---
                     Prediction = predictionResponse.Prediction,
                     Confidence = predictionResponse.Confidence,
                     SensorData = row.ToDictionary(kvp => kvp.Key, kvp => (object)kvp.Value)
                 };
+                
+                sampleCounter++; // Increment for the next loop
                 
                 yield return logEntry;
             }

@@ -7,6 +7,8 @@ import { UploadApiService } from '../../services/upload-api.service';
 import { LoaderService } from '../../services/loader.service';
 import { FormProgressService } from '../../services/form-progress.service';
 import { Router } from '@angular/router';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { ErrorsuccessboxComponent } from '../../shared/components/errorsuccessbox/errorsuccessbox.component';
 
 interface DateRange {
   startDate: string;
@@ -23,8 +25,15 @@ interface SummaryData {
 
 @Component({
   selector: 'app-data-ranges',
-  standalone: true,  // <-- ADD THIS // <-- ADD THIS
-  imports: [BarChartComponent, ButtonComponent, CommonModule, FormsModule],
+  standalone: true,
+  imports: [
+    BarChartComponent,
+    ButtonComponent,
+    CommonModule,
+    FormsModule,
+    LoaderComponent,
+    ErrorsuccessboxComponent,
+  ],
   templateUrl: './data-ranges.component.html',
   styleUrl: './data-ranges.component.css',
 })
@@ -32,6 +41,7 @@ export class DataRangesComponent {
   training: DateRange = { startDate: '', endDate: '' };
   testing: DateRange = { startDate: '', endDate: '' };
   simulation: DateRange = { startDate: '', endDate: '' };
+  isLoading = false;
 
   recordCounts: any = null;
   isValid: boolean = false;
@@ -43,6 +53,20 @@ export class DataRangesComponent {
     private formProgress: FormProgressService
   ) {}
 
+  alertMessage: string = '';
+  alertType: 'success' | 'error' = 'error';
+  showAlert: boolean = false;
+
+  showAlertBox(message: string, type: 'success' | 'error' = 'error') {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
+
+    setTimeout(() => {
+      this.showAlert = false;
+    }, 4000);
+  }
+
   validateRanges() {
     const body = {
       trainingPeriod: this.training,
@@ -50,21 +74,33 @@ export class DataRangesComponent {
       simulationPeriod: this.simulation,
     };
 
-    this.loaderService.show();
+    this.isLoading = true;
+
     this.api.validateRanges(body).subscribe({
       next: (res) => {
         this.recordCounts = res.recordCounts;
         this.isValid = res.isValid;
-        this.loaderService.hide();
+        this.isLoading = false;
+        if (res.isValid) {
+          console.log(this.recordCounts);
+
+          this.showAlertBox('Date ranges validated successfully!', 'success');
+        } else {
+          this.showAlertBox(
+            'Validation completed, but ranges are invalid.',
+            'error'
+          );
+        }
       },
       error: (err) => {
-        alert(err?.error?.message || 'Validation failed.');
+        this.showAlertBox(err?.error?.message || 'Validation failed.', 'error');
         this.recordCounts = null;
         this.isValid = false;
-        this.loaderService.hide();
+        this.isLoading = false;
       },
     });
   }
+
   splitTimes: any[] = [];
   autoFillDateRanges() {
     const uploadResult = this.formProgress.getData(
@@ -76,7 +112,10 @@ export class DataRangesComponent {
       !uploadResult.dateRangeStart ||
       !uploadResult.dateRangeEnd
     ) {
-      alert('No valid date range available from uploaded dataset.');
+      this.showAlertBox(
+        'No valid date range available from uploaded dataset.',
+        'error'
+      );
       return;
     }
 
@@ -86,7 +125,10 @@ export class DataRangesComponent {
     const totalMs = endUTC.getTime() - startUTC.getTime();
 
     if (totalMs <= 0) {
-      alert('Invalid date range. End date must be after start date.');
+      this.showAlertBox(
+        'Invalid date range. End date must be after start date.',
+        'error'
+      );
       return;
     }
 
@@ -140,8 +182,6 @@ export class DataRangesComponent {
       { label: 'testing', ...this.testing },
       { label: 'simulation', ...this.simulation },
     ];
-
-    console.log('Split Times:', this.splitTimes);
   }
 
   onNextClicked() {
@@ -150,7 +190,27 @@ export class DataRangesComponent {
       this.formProgress.completeStep('data-ranges');
       this.router.navigate(['/model-training']);
     } else {
-      alert('Please validate the date ranges before proceeding.');
+      this.showAlertBox(
+        'Please validate the date ranges before proceeding.',
+        'error'
+      );
+      return;
     }
+  }
+
+  formatDateDisplay(utcString: string): string {
+    const date = new Date(utcString + 'Z'); // Ensure it's treated as UTC
+    const options: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+      timeZone: 'UTC',
+    };
+
+    return new Intl.DateTimeFormat('en-GB', options).format(date);
   }
 }

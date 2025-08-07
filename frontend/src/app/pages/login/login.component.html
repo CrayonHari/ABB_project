@@ -1,0 +1,35 @@
+<div class="wrapper">
+  <div class="card-enclosure">
+    <div class="card-content">
+      <h2>Login</h2>
+      <form (ngSubmit)="login()" autocomplete="off" style="width: 100%;">
+        <label>
+          Username
+          <input
+            [(ngModel)]="username"
+            name="username"
+            required
+            autocomplete="username"
+          />
+        </label>
+        <label>
+          Password
+          <input
+            [(ngModel)]="password"
+            name="password"
+            type="password"
+            required
+            autocomplete="current-password"
+          />
+        </label>
+        <div class="btn-row">
+          <button class="btn" type="submit">Login</button>
+        </div>
+        <div class="error" *ngIf="error">{{ error }}</div>
+      </form>
+      <div class="message" style="margin-top: 18px;">
+        Don't have an account? <a routerLink="/register">Register here</a>
+      </div>
+    </div>
+  </div>
+</div>

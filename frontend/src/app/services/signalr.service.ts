@@ -20,9 +20,14 @@ export class SignalRService {
     }
 
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('/simulationHub') // RELATIVE URL
+      .withUrl('http://localhost:8081/simulationHub')
       .withAutomaticReconnect()
       .build();
+    // docker
+    // this.hubConnection = new signalR.HubConnectionBuilder()
+    // .withUrl('simulationHub') // RELATIVE URL
+    // .withAutomaticReconnect()
+    // .build();
 
     this.hubConnection.on('ReceivePrediction', (data) => {
       this.predictionReceived$.next(data);
@@ -45,8 +50,9 @@ export class SignalRService {
   }
 
   public startSimulation(simulationPeriod: any): void {
-    this.hubConnection.invoke('StartSimulation', simulationPeriod)
-      .catch(err => console.error(err));
+    this.hubConnection
+      .invoke('StartSimulation', simulationPeriod)
+      .catch((err) => console.error(err));
   }
 
   // This method was missing

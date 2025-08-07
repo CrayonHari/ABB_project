@@ -6,3 +6,4 @@ xgboost
 joblib
 python-multipart
 pyarrow
+imbalanced-learn

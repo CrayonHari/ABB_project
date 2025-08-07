@@ -1,64 +1,39 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  AfterViewInit,
+} from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
+
 import {
   Chart as ChartJS,
-  // Controllers
   LineController,
-  BarController,
-  DoughnutController,
-  PieController,
-  RadarController,
-  PolarAreaController,
-
-  // Elements
-  PointElement,
   LineElement,
-  BarElement,
-  ArcElement,
-  RadialLinearScale,
-
-  // Scales
+  PointElement,
   CategoryScale,
   LinearScale,
-  LogarithmicScale,
-  TimeScale,
-
-  // Plugins
+  Title,
   Tooltip,
   Legend,
-  Title,
   Filler,
 } from 'chart.js';
 
 ChartJS.register(
-  // Controllers
   LineController,
-  BarController,
-  DoughnutController,
-  PieController,
-  RadarController,
-  PolarAreaController,
-
-  // Elements
-  PointElement,
   LineElement,
-  BarElement,
-  ArcElement,
-  RadialLinearScale,
-
-  // Scales
+  PointElement,
   CategoryScale,
   LinearScale,
-  LogarithmicScale,
-  TimeScale,
-
-  // Plugins
+  Title,
   Tooltip,
   Legend,
-  Filler,
-  Title
+  Filler
 );
+
 @Component({
   selector: 'app-line-chart-filled',
   standalone: true,
@@ -66,30 +41,22 @@ ChartJS.register(
   templateUrl: './line-chart-filled.component.html',
   styleUrl: './line-chart-filled.component.css',
 })
-export class LineChartFilledComponent {
+export class LineChartFilledComponent implements OnChanges {
+  @Input() predictions: { confidence: number; timestamp: string }[] = [];
+
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+
   chartData: ChartData<'line', { key: string; value: number }[]> = {
     datasets: [
       {
-        label: 'Quality Score',
-        data: [
-          { key: '1', value: 0.35 },
-          { key: '2', value: 1.12 },
-          { key: '3', value: 0.78 },
-          { key: '4', value: 1.01 },
-          { key: '5', value: 0.66 },
-          { key: '6', value: 0.14 },
-          { key: '7', value: 0.93 },
-          { key: '8', value: 0.49 },
-          { key: '9', value: 0.81 },
-          { key: '10', value: 1.18 },
-        ],
+        label: 'Confidence Score',
+        data: [],
         parsing: {
           xAxisKey: 'key',
           yAxisKey: 'value',
         },
-
-        borderColor: '#ff6384',
-        backgroundColor: '#ff63852c',
+        borderColor: '#42A5F5',
+        backgroundColor: 'rgba(66, 165, 245, 0.2)',
         fill: true,
       },
     ],
@@ -100,7 +67,7 @@ export class LineChartFilledComponent {
     plugins: {
       title: {
         display: true,
-        text: 'Real-Time Quality Predictions',
+        text: 'Real-Time Confidence Chart',
         font: {
           size: 20,
         },
@@ -114,15 +81,36 @@ export class LineChartFilledComponent {
       x: {
         title: {
           display: true,
-          text: 'Time',
+          text: 'Sample',
         },
       },
       y: {
         title: {
           display: true,
-          text: 'Quality Score',
+          text: 'Confidence (%)',
         },
+        min: 0,
+        max: 100,
       },
     },
   };
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['predictions']) {
+      this.updateChartData();
+    }
+  }
+
+  updateChartData(): void {
+    console.log('Chart updated:', this.predictions);
+
+    // const limitedPredictions = this.predictions.slice(-20); // latest 20
+    const limitedPredictions = this.predictions;
+    this.chartData.datasets[0].data = limitedPredictions.map((p, index) => ({
+      key: `${index + 1}`,
+      value: p.confidence,
+    }));
+
+    this.chart?.update();
+  }
 }

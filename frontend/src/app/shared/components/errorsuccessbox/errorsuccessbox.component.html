@@ -1,0 +1,9 @@
+<div class="box" [ngClass]="type">
+  <div class="icon">
+    <span *ngIf="type === 'success'">&#10004;</span>
+    <!-- checkmark -->
+    <span *ngIf="type === 'error'">&#10060;</span>
+    <!-- cross -->
+  </div>
+  <div class="message">{{ message }}</div>
+</div>

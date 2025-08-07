@@ -96,7 +96,7 @@ export class BarChartComponent {
     plugins: {
       title: {
         display: true,
-        text: 'Visual block of Selected Ranges',
+        text: 'Selected Date Ranges Summary',
         font: {
           size: 20,
         },

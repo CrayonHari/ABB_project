@@ -1,0 +1,35 @@
+.box {
+  display: flex;
+  align-items: center;
+  border-left: 4px solid;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-size: 14px;
+  max-width: 100%;
+}
+
+/* Icon spacing */
+.icon {
+  margin-right: 12px;
+  font-size: 18px;
+}
+
+/* Message */
+.message {
+  flex: 1;
+}
+
+/* Success Styling */
+.success {
+  background-color: #e6f4ea;
+  color: #237a41;
+  border-color: #237a41;
+}
+
+/* Error Styling */
+.error {
+  background-color: #fce8e6;
+  color: #b3261e;
+  border-color: #b3261e;
+}

@@ -1,3 +1,5 @@
+
+
 version: '3.8'
 
 networks:
@@ -6,10 +8,7 @@ networks:
 
 services:
   frontend:
-    build:
-      # Goes up one level, then into the 'frontend' folder
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: krishnaj0324/abb-project:frontend
     container_name: frontend-container
     ports:
       - "8080:80"
@@ -19,10 +18,7 @@ services:
       - production-backend
 
   production-backend:
-    build:
-      # Looks for a Dockerfile in the './ProductionBackend' subfolder
-      context: ./ProductionBackend
-      dockerfile: Dockerfile
+    image: krishnaj0324/abb-project:backend
     container_name: production-backend-container
     ports:
       - "8081:8080"
@@ -36,10 +32,7 @@ services:
       - ml-service
 
   ml-service:
-    build:
-      # Looks for a Dockerfile in the './ml_service' subfolder
-      context: ./ml_service
-      dockerfile: Dockerfile
+    image: krishnaj0324/abb-project:backend
     container_name: ml-service-container
     ports:
       - "8000:8000"

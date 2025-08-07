@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
 
@@ -67,23 +67,46 @@ ChartJS.register(
   styleUrl: './donut-chart.component.css',
 })
 export class DonutChartComponent {
+  @Input() confusionMatrix: number[][] | null | undefined;
+  ngOnChanges() {
+    if (
+      this.confusionMatrix &&
+      this.confusionMatrix.length === 2 &&
+      this.confusionMatrix[0].length === 2 &&
+      this.confusionMatrix[1].length === 2
+    ) {
+      const truePositive = this.confusionMatrix[1][1];
+      const falsePositive = this.confusionMatrix[0][1];
+      const falseNegative = this.confusionMatrix[1][0];
+      const trueNegative = this.confusionMatrix[0][0];
+
+      console.log('TP:', truePositive);
+      console.log('TN:', trueNegative);
+      console.log('FP:', falsePositive);
+      console.log('FN:', falseNegative);
+
+      // You can now use these in your chart
+      this.chartData.datasets[0].data = [
+        { key: 'True Positive', value: truePositive },
+        { key: 'False Positive', value: falsePositive },
+        { key: 'False Negative', value: falseNegative },
+        { key: 'True Negative', value: trueNegative },
+      ];
+    }
+  }
+
   chartData: ChartData<'doughnut', { key: string; value: number }[]> = {
     labels: [
       'True Positive',
-      'True Negative',
       'False Positive',
       'False Negative',
+      'True Negative',
     ],
     datasets: [
       {
-        data: [
-          { key: 'True Positive', value: 69 },
-          { key: 'True Negative', value: 16 },
-          { key: 'False Positive', value: 4 },
-          { key: 'False Negative', value: 2 },
-        ],
+        data: [],
 
-        backgroundColor: ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF'],
+        backgroundColor: ['#6BCB77', '#FFD93D', '#FF6B6B', '#4D96FF'],
         hoverOffset: 4,
       },
     ],
@@ -93,7 +116,7 @@ export class DonutChartComponent {
     plugins: {
       title: {
         display: true,
-        text: 'Model Performance',
+        text: 'Confusion Matrix',
         font: {
           size: 18,
         },

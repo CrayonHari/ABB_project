@@ -1,0 +1,57 @@
+version: '3.8'
+
+networks:
+  app-network:
+    driver: bridge
+
+services:
+  frontend:
+    build:
+      # The context is now a simple, direct path to the 'frontend' folder
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: krishnaj0324/abb-project:frontend
+    container_name: frontend-container
+    ports:
+      - "8080:80"
+    networks:
+      - app-network
+    depends_on:
+      - production-backend
+
+  production-backend:
+    build:
+      # The context now points into the 'backend' folder first
+      context: ./backend/ProductionBackend
+      dockerfile: Dockerfile
+    image: krishnaj0324/abb-project:backend
+    container_name: production-backend-container
+    ports:
+      - "8081:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      MLService__BaseUrl: http://ml-service:8000
+    networks:
+      - app-network
+    depends_on:
+      - ml-service
+
+  ml-service:
+    build:
+      # The context also points into the 'backend' folder first
+      context: ./backend/ml_service
+      dockerfile: Dockerfile
+    # --- THIS IS THE KEY FIX ---
+    # The ML service now has a unique image tag.
+    image: krishnaj0324/abb-project:ml-service
+    container_name: ml-service-container
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network

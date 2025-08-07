@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductionBackend.DTOs;
 using System.Net.Http.Json;
-
 namespace ProductionBackend.Controllers;
 
 [ApiController]

@@ -1,4 +1,6 @@
 <div class="wrapper">
+  <h2 class="section-heading">Data Range Selection</h2>
+
   <div class="datepickers">
     <div class="datepicker">
       <div>Training Period</div>
@@ -26,30 +28,57 @@
       <input type="datetime-local" step="1" [(ngModel)]="simulation.endDate" />
     </div>
   </div>
+  <app-errorsuccessbox
+    *ngIf="showAlert"
+    [type]="alertType"
+    [message]="alertMessage"
+  >
+  </app-errorsuccessbox>
 
-  <div class="dateshows" *ngIf="recordCounts">
-    <div class="dateshow">
-      <div class="heading">Training Period</div>
-      <div class="num">{{ recordCounts.training }}</div>
-      <div class="date">{{ training.startDate }} → {{ training.endDate }}</div>
-    </div>
-    <div class="dateshow">
-      <div class="heading">Testing Period</div>
-      <div class="num">{{ recordCounts.testing }}</div>
-      <div class="date">{{ testing.startDate }} → {{ testing.endDate }}</div>
-    </div>
-    <div class="dateshow">
-      <div class="heading">Simulation Period</div>
-      <div class="num">{{ recordCounts.simulation }}</div>
-      <div class="date">
-        {{ simulation.startDate }} → {{ simulation.endDate }}
+  <div class="loader-wrapper" *ngIf="isLoading">
+    <app-loader
+      [overlay]="false"
+      [message]="'Uploading dataset...'"
+    ></app-loader>
+  </div>
+
+  <!-- Output Box with Light Grey Background -->
+  <div class="output-container" *ngIf="recordCounts">
+    <div class="dateshows">
+      <div class="dateshow">
+        <div class="heading">Training Period</div>
+        <div class="num">{{ recordCounts.training }}</div>
+        <div class="date">
+          {{ formatDateDisplay(training.startDate) }} →
+          {{ formatDateDisplay(training.endDate) }}
+        </div>
+      </div>
+      <div class="dateshow">
+        <div class="heading">Testing Period</div>
+        <div class="num">{{ recordCounts.testing }}</div>
+        <div class="date">
+          {{ formatDateDisplay(testing.startDate) }} →
+          {{ formatDateDisplay(testing.endDate) }}
+        </div>
+      </div>
+      <div class="dateshow">
+        <div class="heading">Simulation Period</div>
+        <div class="num">{{ recordCounts.simulation }}</div>
+        <div class="date">
+          {{ formatDateDisplay(simulation.startDate) }} →
+          {{ formatDateDisplay(simulation.endDate) }}
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- <app-bar-chart *ngIf="recordCounts" [data]="recordCounts"></app-bar-chart> -->
-  <app-bar-chart *ngIf="recordCounts"></app-bar-chart>
+  <!-- <app-bar-chart *ngIf="recordCounts"></app-bar-chart> -->
+
   <div class="btn">
+    <app-button
+      (click)="autoFillDateRanges()"
+      label="Auto Split (70:20:10)"
+    ></app-button>
     <app-button
       label="Validate Ranges"
       type="primary"
@@ -62,10 +91,6 @@
       type="primary"
       [disabled]="!isValid"
       (click)="onNextClicked()"
-    ></app-button>
-    <app-button
-      (click)="autoFillDateRanges()"
-      label="Auto Fill Ranges"
     ></app-button>
   </div>
 </div>

@@ -1,3 +1,8 @@
+# ===================================================================
+# FILE: backend/ml_service/app/ml/model_trainer.py
+# This version uses SMOTE to handle class imbalance more effectively.
+# ===================================================================
+
 import pandas as pd
 import xgboost as xgb
 from sklearn.metrics import (
@@ -10,6 +15,12 @@ import os
 import json
 import pyarrow.parquet as pq
 
+# --- START OF CHANGES ---
+# Import SMOTE for handling class imbalance
+from imblearn.over_sampling import SMOTE
+# --- END OF CHANGES ---
+
+# Import paths from the main app's namespace
 from app.main import PROCESSED_DATA_PATH, MODEL_PATH, MODEL_COLUMNS_PATH, THRESHOLD_PATH
 
 def train_model_on_range(train_start: str, train_end: str, test_start: str, test_end: str):
@@ -44,20 +55,25 @@ def train_model_on_range(train_start: str, train_end: str, test_start: str, test
     X_train, y_train = train_df[feature_cols].fillna(0), train_df['Response_mapped']
     X_test, y_test = test_df[feature_cols].fillna(0), test_df['Response_mapped']
 
-    neg_count, pos_count = y_train.value_counts().get(0, 0), y_train.value_counts().get(1, 0)
-    scale_pos_weight = (neg_count / pos_count) if pos_count > 0 else 1
+    # --- START OF CHANGES ---
+    # Apply SMOTE to the training data to create synthetic minority samples
+    print("Original training set shape %s" % str(y_train.value_counts()))
+    sm = SMOTE(random_state=42)
+    X_train_res, y_train_res = sm.fit_resample(X_train, y_train)
+    print("Resampled training set shape %s" % str(y_train_res.value_counts()))
+    # --- END OF CHANGES ---
 
+    # We no longer need scale_pos_weight because SMOTE has balanced the dataset
     model = xgb.XGBClassifier(
         n_estimators=150, learning_rate=0.05, max_depth=5, subsample=0.8,
-        colsample_bytree=0.8, scale_pos_weight=scale_pos_weight,
-        eval_metric=['logloss', 'error'], # Track both loss and error (1-accuracy)
+        colsample_bytree=0.8,
+        eval_metric=['logloss', 'error'],
         random_state=42, use_label_encoder=False
     )
     
-    # --- CHANGE 1: Capture Training History ---
-    # We provide an evaluation set to track metrics during training.
-    eval_set = [(X_train, y_train), (X_test, y_test)]
-    model.fit(X_train, y_train, eval_set=eval_set, verbose=False)
+    # Use the resampled data for training
+    eval_set = [(X_train_res, y_train_res), (X_test, y_test)]
+    model.fit(X_train_res, y_train_res, eval_set=eval_set, verbose=False)
 
     model.save_model(MODEL_PATH)
     joblib.dump(feature_cols, MODEL_COLUMNS_PATH)
@@ -86,13 +102,11 @@ def train_model_on_range(train_start: str, train_end: str, test_start: str, test
     
     metrics_percent = {key: value * 100 for key, value in metrics_dict.items()}
     
-    # --- CHANGE 2: Add Confusion Matrix and History to Response ---
     cm = confusion_matrix(y_test, y_pred)
-    metrics_percent['confusion_matrix'] = cm.tolist() # Convert numpy array to a standard list
+    metrics_percent['confusion_matrix'] = cm.tolist()
 
     evals_result = model.evals_result()
     train_loss = evals_result['validation_0']['logloss']
-    # XGBoost tracks 'error', which is (1 - accuracy). We convert it back to accuracy.
     train_accuracy = [1.0 - x for x in evals_result['validation_0']['error']] 
 
     history = []

@@ -11,16 +11,16 @@ export const routes: Routes = [
   {
     path: 'data-ranges',
     component: DataRangesComponent,
-    // canActivate: [formStepGuard],
+    canActivate: [formStepGuard],
   },
   {
     path: 'model-training',
     component: ModelTrainingComponent,
-    // canActivate: [formStepGuard],
+    canActivate: [formStepGuard],
   },
   {
     path: 'simulation',
     component: SimulationComponent,
-    // canActivate: [formStepGuard],
+    canActivate: [formStepGuard],
   },
 ];

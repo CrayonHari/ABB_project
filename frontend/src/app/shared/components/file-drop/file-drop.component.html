@@ -1,16 +1,24 @@
 <div class="dropzone" [class.dragging]="isDragging" (click)="fileInput.click()">
-  <img src="assets/upload.png" alt="" height="60px" />
-  <div class="text" style="padding-top: 12px">
-    <p ngIf="fileName.length === 0">Drag and drop your file here</p>
-    <p style="font-size: 14px">or click to browse files</p>
-    <p style="font-size: 12px; color: #888">
-      <i>Only csv files are accepted.</i>
-    </p>
-  </div>
+  <!-- DEFAULT state -->
+  <ng-container *ngIf="!fileName; else fileSelected">
+    <img src="assets/upload.png" alt="" height="70px" />
+    <div class="text" style="padding-top: 12px">
+      <p>Drag and drop your file here</p>
+      <p style="font-size: 16px">or click to browse files</p>
+      <p style="font-size: 14px; color: #888">
+        <i>Only csv files are accepted.</i>
+      </p>
+    </div>
+  </ng-container>
 
-  <p class="file-name" ngIf="fileName.length > 0">
-    {{ fileName }}
-  </p>
+  <!-- FILE SELECTED state -->
+  <ng-template #fileSelected>
+    <img src="assets/csv.png" alt="CSV File" height="70px" />
+    <div class="file-info">
+      <p class="file-name">{{ fileName }}</p>
+      <p class="file-size">{{ fileSize }} KB</p>
+    </div>
+  </ng-template>
 
   <input
     #fileInput

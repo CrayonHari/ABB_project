@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using ProductionBackend.DTOs;
 
 namespace ProductionBackend.Controllers;
-
 [ApiController]
 [Route("api/[controller]")]
 public class AdminController : ControllerBase

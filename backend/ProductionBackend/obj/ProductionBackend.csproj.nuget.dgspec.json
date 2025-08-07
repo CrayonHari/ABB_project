@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ABB_project\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj": {}
+    "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj": {}
   },
   "projects": {
-    "D:\\ABB_project\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj": {
+    "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ABB_project\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj",
+        "projectUniqueName": "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj",
         "projectName": "ProductionBackend",
-        "projectPath": "D:\\ABB_project\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj",
-        "packagesPath": "C:\\Users\\Harie\\.nuget\\packages\\",
-        "outputPath": "D:\\ABB_project\\ABB_project\\backend\\ProductionBackend\\obj\\",
+        "projectPath": "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj",
+        "packagesPath": "C:\\Users\\krish\\.nuget\\packages\\",
+        "outputPath": "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Harie\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\krish\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -45,7 +45,7 @@
           "dependencies": {
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.5.0, )"
+              "version": "[9.0.3, )"
             }
           },
           "imports": [

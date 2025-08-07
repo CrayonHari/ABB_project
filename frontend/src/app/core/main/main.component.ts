@@ -1,46 +1,54 @@
-
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
   Router,
   RouterOutlet,
-  Event as RouterEvent,
-  NavigationStart,
-  NavigationEnd,
-  NavigationCancel,
-  NavigationError
 } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
+import { UploadDatasetComponent } from '../../pages/upload-dataset/upload-dataset.component';
+import { DataRangesComponent } from '../../pages/data-ranges/data-ranges.component';
+import { ModelTrainingComponent } from '../../pages/model-training/model-training.component';
+import { SimulationComponent } from '../../pages/simulation/simulation.component';
 import { LoaderService } from '../../services/loader.service';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
-
-// We no longer need to import the page components here,
-// as the router will handle loading them.
-// This helps prevent circular dependency issues.
+import { Event } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-main',
   standalone: true,
   imports: [
-    CommonModule,
     RouterOutlet,
+    NgClass,
+    UploadDatasetComponent,
+    DataRangesComponent,
+    ModelTrainingComponent,
+    SimulationComponent,
+    CommonModule,
     LoaderComponent,
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css',
 })
-export class MainComponent implements OnInit {
+export class MainComponent {
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
   currentRoute: string = '';
   pageNo: number = 1;
 
-  // Make sure LoaderService is public if you access it in the template
   constructor(public loaderService: LoaderService, private router: Router) {}
 
   ngOnInit(): void {
-    this.router.events.subscribe((event: RouterEvent) => {
+    this.router.events.subscribe((event: Event) => {
+      // Show loader when navigation starts
       if (event instanceof NavigationStart) {
         this.loaderService.show();
       }
 
+      // Hide loader and update page number when navigation ends or fails
       if (
         event instanceof NavigationEnd ||
         event instanceof NavigationCancel ||
@@ -60,6 +68,12 @@ export class MainComponent implements OnInit {
           } else if (this.currentRoute.includes('simulation')) {
             this.pageNo = 4;
           }
+
+          setTimeout(() => {
+            if (this.scrollContainer) {
+              this.scrollContainer.nativeElement.scrollTop = 0;
+            }
+          }, 0);
         }
       }
     });

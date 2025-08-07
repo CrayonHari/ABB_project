@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NgTableComponent } from './ng-table.component';
+import { ErrorsuccessboxComponent } from './errorsuccessbox.component';
 
-describe('NgTableComponent', () => {
-  let component: NgTableComponent;
-  let fixture: ComponentFixture<NgTableComponent>;
+describe('ErrorsuccessboxComponent', () => {
+  let component: ErrorsuccessboxComponent;
+  let fixture: ComponentFixture<ErrorsuccessboxComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NgTableComponent]
+      imports: [ErrorsuccessboxComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NgTableComponent);
+    fixture = TestBed.createComponent(ErrorsuccessboxComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
