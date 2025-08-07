@@ -41,6 +41,29 @@ Ensure you have the following installed:
 ```bash
 docker-compose up --build
 ```
+### or an easier method
+✅ 1. Install Docker
+
+Make sure Docker is installed and running:
+
+    Docker for Windows
+
+    Docker for macOS
+
+    Linux: install via package manager (e.g., apt, dnf)
+
+✅ 2. Pull Your Docker Image
+
+In a terminal or command prompt, run:
+
+docker pull krishnaj0324/abb-project
+
+This pulls the latest version of the image from Docker Hub.
+✅ 3. Run the Container
+
+Once the image is pulled, run it using:
+
+docker run -it krishnaj0324/abb-project
 
 This will build and launch:
 - The Angular frontend on port `8080`
