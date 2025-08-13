@@ -1,56 +1,63 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
 
 import {
   Chart as ChartJS,
+  // Controllers
   LineController,
   BarController,
   DoughnutController,
   PieController,
   RadarController,
   PolarAreaController,
+
+  // Elements
   PointElement,
   LineElement,
   BarElement,
   ArcElement,
   RadialLinearScale,
+
+  // Scales
   CategoryScale,
   LinearScale,
   LogarithmicScale,
   TimeScale,
+
+  // Plugins
   Tooltip,
   Legend,
   Title,
 } from 'chart.js';
 
 ChartJS.register(
+  // Controllers
   LineController,
   BarController,
   DoughnutController,
   PieController,
   RadarController,
   PolarAreaController,
+
+  // Elements
   PointElement,
   LineElement,
   BarElement,
   ArcElement,
   RadialLinearScale,
+
+  // Scales
   CategoryScale,
   LinearScale,
   LogarithmicScale,
   TimeScale,
+
+  // Plugins
   Tooltip,
   Legend,
   Title
 );
-
 @Component({
   selector: 'app-circle-stat',
   standalone: true,
@@ -58,22 +65,19 @@ ChartJS.register(
   templateUrl: './circle-stat.component.html',
   styleUrl: './circle-stat.component.css',
 })
-export class CircleStatComponent implements OnChanges {
-  @Input() passed: number = 0;
-  @Input() failed: number = 0;
-
-  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
-
+export class CircleStatComponent {
   chartData: ChartData<'doughnut', { key: string; value: number }[]> = {
     datasets: [
       {
-        data: [{ key: '', value: 0 }],
-        backgroundColor: ['#4CAF50', '#F44336'],
+        data: [{ key: '1', value: 1 }],
+        backgroundColor: ['#FF6B6B'],
       },
     ],
   };
 
   chartOptions: ChartOptions<'doughnut'> = {
+    circumference: 330,
+
     plugins: {
       title: {
         display: true,
@@ -90,18 +94,4 @@ export class CircleStatComponent implements OnChanges {
       },
     },
   };
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['passed'] || changes['failed']) {
-      this.updateChartData();
-    }
-  }
-
-  updateChartData(): void {
-    this.chartData.datasets[0].data = [
-      { key: '', value: this.passed },
-      { key: '', value: this.failed },
-    ];
-    this.chart?.update(); // ← trigger chart redraw
-  }
 }

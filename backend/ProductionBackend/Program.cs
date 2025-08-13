@@ -1,82 +1,76 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using ProductionBackend.Hubs;
 using ProductionBackend.Services;
-using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
-// --- Configuration for Large File Uploads ---
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.Limits.MaxRequestBodySize = 209715200; // 200 MB
-});
-
-builder.Services.Configure<FormOptions>(options =>
-{
-    options.MultipartBodyLengthLimit = 209715200; // 200 MB
-});
-
 // --- Service Registration ---
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
-builder.Services.AddScoped<SimulationService>();
+builder.Services.AddScoped<SimulationService>(); // Correctly scoped, not singleton
 
-// --- START OF THE FIX ---
-// ML Service Client Configuration
 builder.Services.AddHttpClient("MLServiceClient", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["MLService:BaseUrl"] ?? "http://localhost:8000");
-    
-    // Increase the timeout to 20 minutes to allow for long model training times.
-    // The default is ~100 seconds, which was causing the premature error.
-    client.Timeout = TimeSpan.FromMinutes(20); 
 });
-// --- END OF THE FIX ---
 
-// --- CORS Policy ---
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "SuperSecretKeyChangeMe!";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "MyBackend";
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins(
-                              "http://localhost:8080"  // Angular frontend
-                          )
-                          .AllowAnyHeader()
-                          .AllowAnyMethod()
-                          .AllowCredentials();
+                          policy.WithOrigins("http://localhost:4200")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
                       });
 });
 
 var app = builder.Build();
 
-// --- Middleware ---
+// --- Middleware Pipeline ---
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// ==========================================================
+// THE FIX: This line is now removed or commented out.
+// app.UseHttpsRedirection(); 
+// ==========================================================
+
 app.UseRouting();
 app.UseCors(MyAllowSpecificOrigins);
-
-// IMPORTANT: Authentication has been removed as per your request.
+app.UseAuthentication();
 app.UseAuthorization();
-
-// Map Controllers & SignalR
 app.MapControllers();
 app.MapHub<SimulationHub>("/simulationHub");
 
-// Health Check
-app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
-
-app.Run();
+app.Run(); // Let environment variables from docker-compose control the URL

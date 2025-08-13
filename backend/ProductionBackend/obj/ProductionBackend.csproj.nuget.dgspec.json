@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj": {}
+    "/Users/sairam/Downloads/ABB_project/backend/ProductionBackend/ProductionBackend.csproj": {}
   },
   "projects": {
-    "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj": {
+    "/Users/sairam/Downloads/ABB_project/backend/ProductionBackend/ProductionBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj",
+        "projectUniqueName": "/Users/sairam/Downloads/ABB_project/backend/ProductionBackend/ProductionBackend.csproj",
         "projectName": "ProductionBackend",
-        "projectPath": "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\ProductionBackend.csproj",
-        "packagesPath": "C:\\Users\\krish\\.nuget\\packages\\",
-        "outputPath": "D:\\coding\\project\\frontend\\ABB_project\\backend\\ProductionBackend\\obj\\",
+        "projectPath": "/Users/sairam/Downloads/ABB_project/backend/ProductionBackend/ProductionBackend.csproj",
+        "packagesPath": "/Users/sairam/.nuget/packages/",
+        "outputPath": "/Users/sairam/Downloads/ABB_project/backend/ProductionBackend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\krish\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/sairam/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -43,9 +43,17 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[9.0.3, )"
+              "version": "[6.5.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.0.3, )"
             }
           },
           "imports": [
@@ -67,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.412/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

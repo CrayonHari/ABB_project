@@ -1,6 +1,6 @@
-/* .wrapper {
-  max-width: 40vw;
-} */
+.wrapper {
+  width: 60vw;
+}
 
 .table-container {
   margin: 20px auto;

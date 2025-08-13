@@ -1,27 +1,20 @@
 .app-header {
   width: 95%;
-  margin: 0 0 0 0;
-  background: rgb(0,0,0)
-  /*linear-gradient(
-    to right,
-    rgba(255, 0, 0, 0.45),
-    rgba(0, 0, 255, 0.08)
-  ); /* subtle gradient */
+  margin: 20px auto 0 auto;
+  background: var(--color-sec);
   height: 60px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  border-radius: 0px;
-
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(150, 75, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
 }
 
 .app-header .brand {
-  color: var(--color-sec);
-
+  color: rgba(150, 75, 0, 0.7);
   font-weight: 600;
-
-  font-size: 28px;
+  font-size: 24px;
   letter-spacing: 3px;
 }
 

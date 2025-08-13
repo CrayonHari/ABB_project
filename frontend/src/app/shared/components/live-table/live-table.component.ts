@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-live-table',
@@ -8,53 +8,36 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
   templateUrl: './live-table.component.html',
   styleUrl: './live-table.component.css',
 })
-export class LiveTableComponent implements OnChanges {
-  @Input() predictions: any[] = [];
+export class LiveTableComponent implements OnInit, OnDestroy {
+  tableData: { time: string; sales: number; revenue: number }[] = [];
+  displayedColumns = ['time', 'sales', 'revenue'];
+  private intervalId: any;
 
-  tableData: any[] = [];
-  displayedColumns: string[] = [];
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['predictions'] && this.predictions?.length > 0) {
-      this.processPredictions();
-    }
+  getCellValue(
+    row: { time: string; sales: number; revenue: number },
+    column: string
+  ): string | number {
+    return row[column as keyof typeof row];
   }
 
-  processPredictions(): void {
-    if (!this.predictions || this.predictions.length === 0) {
-      this.tableData = [];
-      this.displayedColumns = [];
-      return;
-    }
-
-    const formatTimestamp = (utc: string): string => {
-      const date = new Date(utc);
-      const options: Intl.DateTimeFormatOptions = {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-        timeZone: 'UTC',
+  ngOnInit(): void {
+    this.intervalId = setInterval(() => {
+      const now = new Date().toLocaleTimeString();
+      const newRow = {
+        time: now,
+        sales: Math.floor(Math.random() * 100),
+        revenue: Math.floor(Math.random() * 1000),
       };
 
-      return new Intl.DateTimeFormat('en-GB', options).format(date);
-    };
+      this.tableData.push(newRow);
 
-    this.tableData = this.predictions.map((p) => ({
-      timestamp: formatTimestamp(p.timestamp),
-      sampleId: p.sampleId,
-      prediction: p.prediction,
-      confidence: p.confidence,
-      // You can also include sensorData here if needed
-    }));
-
-    this.displayedColumns = Object.keys(this.tableData[0]);
+      if (this.tableData.length > 10) {
+        this.tableData.shift();
+      }
+    }, 1000);
   }
 
-  getCellValue(row: any, column: string): string | number {
-    return row[column];
+  ngOnDestroy(): void {
+    clearInterval(this.intervalId);
   }
 }
