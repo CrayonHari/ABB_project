@@ -2,7 +2,7 @@
   <table>
     <thead>
       <tr>
-        <th *ngFor="let col of displayedColumns">{{ col }}</th>
+        <th *ngFor="let col of displayedColumns">{{ col | titlecase }}</th>
       </tr>
     </thead>
     <tbody>

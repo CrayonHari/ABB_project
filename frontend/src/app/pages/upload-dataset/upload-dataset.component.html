@@ -1,54 +1,32 @@
 <div class="wrapper">
+  <!-- Only show file drop when not loading and not uploaded -->
   <app-file-drop
-    (fileDropped)="handleFile($event)"
-    (fileInfo)="onFileInfoReceived($event)"
     *ngIf="!isLoading && !isUploaded"
+    (fileDropped)="handleFile($event)"
   ></app-file-drop>
 
-  <div class="loader-wrapper" *ngIf="isLoading">
-    <app-loader
-      [overlay]="false"
-      [message]="'Uploading dataset...'"
-    ></app-loader>
+  <!-- Local loader while uploading -->
+  <app-loader
+    *ngIf="isLoading"
+    [overlay]="false"
+    [message]="'Uploading dataset...'"
+  ></app-loader>
+
+  <!-- Upload result shown in same place after upload -->
+  <div *ngIf="uploadResult && isUploaded" class="upload-result">
+    <p class="success">{{ uploadResult.message }}</p>
+    <ul>
+      <li><strong>Total Records:</strong> {{ uploadResult.totalRecords }}</li>
+      <li><strong>Columns:</strong> {{ uploadResult.columnCount }}</li>
+      <li>
+        <strong>Date Range:</strong> {{ uploadResult.dateRangeStart }} →
+        {{ uploadResult.dateRangeEnd }}
+      </li>
+      <li><strong>Pass Rate:</strong> {{ uploadResult.passRate }}%</li>
+    </ul>
   </div>
-  <div *ngIf="uploadResult && isUploaded" class="upload-result-flex">
-    <div class="upload-box">
-      <p class="box-title">File Name</p>
-      <p class="box-data">{{ fileName }}</p>
-      <p class="box-title">File Size</p>
-      <p class="box-data">{{ fileSize }} KB</p>
-    </div>
 
-    <div class="upload-box">
-      <p class="box-title">Total Records</p>
-      <p class="box-data">{{ uploadResult.totalRecords }}</p>
-    </div>
-
-    <div class="upload-box">
-      <p class="box-title">Columns</p>
-      <p class="box-data">{{ uploadResult.columnCount }}</p>
-    </div>
-
-    <div class="upload-box">
-      <p class="box-title">Date Range</p>
-      <p class="box-data">
-        {{ formatDateDisplay(uploadResult.dateRangeStart) }}
-      </p>
-      <p class="box-data">{{ formatDateDisplay(uploadResult.dateRangeEnd) }}</p>
-    </div>
-
-    <div class="upload-box">
-      <p class="box-title">Pass Rate</p>
-      <p class="box-data">{{ uploadResult.passRate }}%</p>
-    </div>
-  </div>
-  <app-errorsuccessbox
-    *ngIf="showAlert"
-    [type]="alertType"
-    [message]="alertMessage"
-  >
-  </app-errorsuccessbox>
-
+  <!-- Upload / Next Button -->
   <app-button
     type="primary"
     [disabled]="isLoading"

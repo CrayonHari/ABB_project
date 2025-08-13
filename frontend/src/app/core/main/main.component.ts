@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   NavigationCancel,
   NavigationEnd,
@@ -15,7 +15,6 @@ import { SimulationComponent } from '../../pages/simulation/simulation.component
 import { LoaderService } from '../../services/loader.service';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
 import { Event } from '@angular/router';
-import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -34,8 +33,6 @@ import { filter } from 'rxjs';
   styleUrl: './main.component.css',
 })
 export class MainComponent {
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
-
   currentRoute: string = '';
   pageNo: number = 1;
 
@@ -68,12 +65,6 @@ export class MainComponent {
           } else if (this.currentRoute.includes('simulation')) {
             this.pageNo = 4;
           }
-
-          setTimeout(() => {
-            if (this.scrollContainer) {
-              this.scrollContainer.nativeElement.scrollTop = 0;
-            }
-          }, 0);
         }
       }
     });

@@ -1,8 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductionBackend.DTOs;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Authorization; // <--- Add this line
+
 namespace ProductionBackend.Controllers;
 
+[Authorize] // <--- Add this line to protect all endpoints in this controller
 [ApiController]
 [Route("api/[controller]")]
 public class ModelController : ControllerBase

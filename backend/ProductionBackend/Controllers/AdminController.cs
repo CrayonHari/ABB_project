@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductionBackend.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProductionBackend.Controllers;
+[Authorize] // <--- Add this line
 [ApiController]
 [Route("api/[controller]")]
 public class AdminController : ControllerBase

@@ -1,80 +1,38 @@
 <div class="wrapper">
-  <h2 class="section-heading">Real-Time Prediction Simulation</h2>
-  <div class="wrapper-adv">
-    <div class="chart-filled">
-      <app-line-chart-filled
-        [predictions]="predictions"
-      ></app-line-chart-filled>
-    </div>
-    <div class="circle-stat">
-      <app-circle-stat [passed]="passed" [failed]="failed"></app-circle-stat>
-    </div>
+  <div class="chart-filled">
+    <app-line-chart-filled></app-line-chart-filled>
+  </div>
+  <div class="circle-stat">
+    <app-circle-stat></app-circle-stat>
+  </div>
 
-    <div class="live-stats">
-      <div class="heading">Live Statistics</div>
-      <div class="live-stats-inner">
-        <div class="card-enclosure">
-          <div class="card-content">
-            <h1 class="num">{{ total }}</h1>
-            <p class="text">TOTAL</p>
-          </div>
-        </div>
-        <div class="card-enclosure">
-          <div class="card-content">
-            <h1 class="num">{{ passed }}</h1>
-            <p class="text">PASS</p>
-          </div>
-        </div>
-        <div class="card-enclosure">
-          <div class="card-content">
-            <h1 class="num">{{ failed }}</h1>
-            <p class="text">FAIL</p>
-          </div>
-        </div>
-        <div class="card-enclosure">
-          <div class="card-content">
-            <h1 class="num">{{ avgConfidence }}%</h1>
-            <p class="text">AVG CONF.</p>
-          </div>
-        </div>
+  <div class="live-stats">
+    <div class="card-enclosure">
+      <div class="card-content">
+        <h1 class="num">20</h1>
+        <p class="text">TOTAL</p>
       </div>
     </div>
-    <div class="live-stream">
-      <div class="heading">Live Prediction Stream</div>
-
-      <app-live-table [predictions]="predictions"></app-live-table>
+    <div class="card-enclosure">
+      <div class="card-content">
+        <h1 class="num">18</h1>
+        <p class="text">PASS</p>
+      </div>
     </div>
-
-    <div class="button-group">
-      <app-button
-        *ngIf="!isRunning && !isCompleted"
-        [disabled]="isRunning"
-        label="Start Simulation"
-        (click)="startSimulation()"
-        >Start Simulation</app-button
-      >
-
-      <app-button
-        *ngIf="isRunning"
-        label="Stop Simulation"
-        (click)="stopSimulation()"
-        >Stop Simulation</app-button
-      >
-
-      <app-button
-        *ngIf="!isRunning && isCompleted"
-        label="Restart Simulation"
-        (click)="startSimulation()"
-        >Restart Simulation</app-button
-      >
-
-      <app-button
-        class="go-home"
-        *ngIf="!isRunning && isCompleted"
-        label="Go to Start"
-        (click)="goToStartPage()"
-        >Go to Start</app-button
-      >
+    <div class="card-enclosure">
+      <div class="card-content">
+        <h1 class="num">3</h1>
+        <p class="text">FAIL</p>
+      </div>
     </div>
+    <div class="card-enclosure">
+      <div class="card-content">
+        <h1 class="num">92.2%</h1>
+        <p class="text">AVG CONF.</p>
+      </div>
+    </div>
+  </div>
+  <div class="live-stream">
+    <app-live-table></app-live-table>
   </div>
 </div>
